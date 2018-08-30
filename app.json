@@ -29,7 +29,7 @@
 				"large": "./drivers/lw100/assets/images/large.png",
 				"small": "./drivers/lw100/assets/images/small.png"
 		    },
-		    "class": "remote",
+		    "class": "other",
 		    "capabilities": ["onoff", "dim"],
 	    "pair": [
 				{
@@ -56,7 +56,7 @@
 				"large": "./drivers/lw101/assets/images/large.png",
 				"small": "./drivers/lw101/assets/images/small.png"
 		    },
-		    "class": "remote",
+		    "class": "other",
 		    "capabilities": ["onoff", "dim"],
 	    "pair": [
 				{
@@ -83,7 +83,7 @@
 				"large": "./drivers/lw107/assets/images/large.png",
 				"small": "./drivers/lw107/assets/images/small.png"
 		    },
-		    "class": "remote",
+		    "class": "other",
 		    "capabilities": ["onoff"],
 	    "pair": [
 				{
@@ -110,7 +110,7 @@
 				"large": "./drivers/lw200/assets/images/large.png",
 				"small": "./drivers/lw200/assets/images/small.png"
 		    },
-		    "class": "remote",
+		    "class": "other",
 		    "capabilities": ["onoff", "dim"],
 	    "pair": [
 				{
@@ -276,7 +276,7 @@
 				"large": "./drivers/lw904/assets/images/large.png",
 				"small": "./drivers/lw904/assets/images/small.png"
 		    },
-		    "class": "remote",
+		    "class": "other",
 		    "capabilities": ["onoff"],
 	    "pair": [
 				{
@@ -303,7 +303,7 @@
 				"large": "./drivers/lw2100/assets/images/large.png",
 				"small": "./drivers/lw2100/assets/images/small.png"
 		    },
-		    "class": "lw2100",
+		    "class": "other",
 		    "capabilities": ["onoff"],
 	    "pair": [
 				{
@@ -645,17 +645,33 @@
 	"signals": {
     	"433": {
         	"lwrf": {
-                "sof": [1,0],
-                "eof": [1],
-                "words": [[0,0,0], [1,0]],
-                "manchesterUnit": 325,
-                "manchesterMaxUnits": 9,
-                "interval": 10500,
-                "repetitions": 20,
-                "sensitivity": 0.5, 
-                "minimalLength": 90,
-                "maximalLength": 90
-        	},
+				"sof": [260,300],
+				"eof": [260],
+				"words": [
+					[260,300,260,300,260,300,260,300,260,1350,260,300,260,1350],
+					[260,300,260,300,260,300,260,1350,260,300,260,300,260,1350],
+					[260,300,260,300,260,300,260,1350,260,300,260,1350,260,300],
+					[260,300,260,300,260,300,260,1350,260,1350,260,300,260,300],
+					[260,300,260,300,260,1350,260,300,260,300,260,300,260,1350],
+					[260,300,260,300,260,1350,260,300,260,300,260,1350,260,300],
+					[260,300,260,300,260,1350,260,300,260,1350,260,300,260,300],
+					[260,300,260,1350,260,300,260,300,260,300,260,300,260,1350],
+					[260,300,260,1350,260,300,260,300,260,300,260,1350,260,300],
+					[260,300,260,1350,260,300,260,300,260,1350,260,300,260,300],
+					[260,300,260,1350,260,300,260,1350,260,300,260,300,260,300],
+					[260,1350,260,300,260,300,260,300,260,300,260,300,260,1350],
+					[260,1350,260,300,260,300,260,300,260,300,260,1350,260,300],
+					[260,1350,260,300,260,300,260,300,260,1350,260,300,260,300],
+					[260,1350,260,300,260,300,260,1350,260,300,260,300,260,300],
+					[260,1350,260,300,260,1350,260,300,260,300,260,300,260,300]
+			],
+				"interval": 10500,
+				"repetitions": 20,
+				"sensitivity": 0.2, 
+				"minimalLength": 9,
+				"maximalLength": 9
+		
+			},
         	"doorbell": {
                 "sof": [320,320,730,730, 320,320,730,320, 730,320,730,320,730,730,320,730],
                 "eof": [],

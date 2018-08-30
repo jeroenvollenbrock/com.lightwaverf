@@ -1177,83 +1177,11 @@ function generatTransID(tempdata) {
 
 
 function GetChannelandPage(device) {
-	var channel;
-	var page;
-	
-	
-	//need channel and Unit for remote with multiple buttons
-	switch(device) {
-    case 0:
-        page = 1;
-		channel = 1;
-        break;
-    case 1:
-        page = 2;
-		channel = 1;
-        break;
-	case 2:
-        page = 3;
-		channel = 1;
-        break;
-	case 3:
-        page = 4;
-		channel = 1;
-        break;
-	case 4:
-        page = 1;
-		channel = 2;
-        break;
-	case 5:
-        page = 2;
-		channel = 2;
-        break;
-	case 6:
-        page = 3;
-		channel = 2;
-        break;
-	case 7:
-        page = 4;
-		channel = 2;
-        break;
-	case 8:
-        page = 1;
-		channel = 3;
-        break;
-	case 9:
-        page = 2;
-		channel = 3;
-        break;
-	case 10:
-        page = 3;
-		channel = 3;
-        break;
-	case 11:
-        page = 4;
-		channel = 3;
-        break;
-	case 12:
-        page = 1;
-		channel = 4;
-        break;
-	case 13:
-        page = 2;
-		channel = 4;
-        break;
-	case 14:
-        page = 3;
-		channel = 4;
-        break;
-	case 15:
-        page = 4;
-		channel = 4;
-        break;
+	var page = (device % 4)+1;
+	var channel = Math.floor(device/4)+1;
 
-    default: 
-		page = 5;
-		channel = 5;
-}
-var Devarr= [channel, page];
-return Devarr;
+	var Devarr = [channel, page];
+	return Devarr;
 }
 
 
@@ -1277,239 +1205,72 @@ function HextoTransID(transId1,transId2, transId3, transId4, transId5){
 }
 
 
-//Used as a look up array for the possible words transmitted by lightwaveRF
-var transcodes = [
-				 '11110110',
-   	 			 '11101110',
-   			 	 '11101101',
-    			 '11101011',
-    			 '11011110',
-    			 '11011101',
-    			 '11011011',
-				 '10111110',
-				 '10111101',
-				 '10111011',   
-				 '10110111',  
-				 '01111110',   
-				 '01111101',    	
-				 '01111011',       	
-				 '01110111',
-				 '01101111']
-
-
-
-
-function parseMessage(data,startpoint){
-	
-	
-	//could do a check to ensure numbers add up to 6
-	
-	var msg = data[startpoint].toString();
-	msg = msg + data[startpoint+1].toString();
-	msg = msg + data[startpoint+2].toString();
-	msg = msg + data[startpoint+3].toString();
-	msg = msg + data[startpoint+4].toString();
-	msg = msg + data[startpoint+5].toString();
-	msg = msg + data[startpoint+6].toString();
-	msg = msg + data[startpoint+7].toString();		
-    var msgI = transcodes.indexOf(msg);
-	
-
-return msgI;
-
-}
-
 function createTXarray(Para1,Para2,Device,command, TransID1, TransID2, TransID3, TransID4, TransID5, SubID){
 
-		//add Para1
-		
-		var txSignal =[1];
-		//txSignal.push(1);
-		var str;
-		str = transcodes[parseInt(Para1,10)];
-		//str = transcodes[0];
+	var txSignal =[
+		parseInt(Para1),
+		parseInt(Para2),
+		parseInt(Device),
+		parseInt(command),
+		parseInt(TransID1),
+		parseInt(TransID2),
+		parseInt(TransID3),
+		parseInt(TransID4),
+		parseInt(TransID5),
+		parseInt(SubID)
+	];
 
-		for (var i = 0, len = str.length; i < len; i++) {
-  			txSignal.push(str[i]);
-		}
-		
-		
-		
-		txSignal.push(1);
-		str = transcodes[parseInt(Para2,10)];
-		for (var i = 0, len = str.length; i < len; i++) {
-  			txSignal.push(str[i]);
-		}
-		
-		txSignal.push(1);	
-		str = transcodes[parseInt(Device,10)];
-		for (var i = 0, len = str.length; i < len; i++) {
-  			txSignal.push(str[i]);
-		}
-		
-		txSignal.push(1);		
-		str = transcodes[parseInt(command,10)];
-		for (var i = 0, len = str.length; i < len; i++) {
-  			txSignal.push(str[i]);
-		}
-		
-		txSignal.push(1);		
-		str = transcodes[parseInt(TransID1,10)];
-		for (var i = 0, len = str.length; i < len; i++) {
-  			txSignal.push(str[i]);
-		}
-		
-		txSignal.push(1);		
-		str = transcodes[parseInt(TransID2,10)];
-		for (var i = 0, len = str.length; i < len; i++) {
-  			txSignal.push(str[i]);
-		}
-		
-		txSignal.push(1);		
-		str = transcodes[parseInt(TransID3,10)];
-		for (var i = 0, len = str.length; i < len; i++) {
-  			txSignal.push(str[i]);
-		}
-		
-		txSignal.push(1);		
-		str = transcodes[parseInt(TransID4,10)];
-		for (var i = 0, len = str.length; i < len; i++) {
-  			txSignal.push(str[i]);
-		}
-				
-		txSignal.push(1);	
-		str = transcodes[parseInt(TransID5,10)];
-		for (var i = 0, len = str.length; i < len; i++) {
-  			txSignal.push(str[i]);
-		}
-		txSignal.push(1);		
-		str = transcodes[parseInt(SubID,10)];
-		for (var i = 0, len = str.length; i < len; i++) {
-  			txSignal.push(str[i]);
-		}
-		
 	return txSignal;		
-	}
+}
 
 
 function parseRXData(data) {
 
-
-	//console.log('Parse data', data);// too long to show
-
-	
 	if (data != undefined) {
+	
+		var para1 = data[0];	
+		var para2 = data[1];	
+		var device = data[2];	
+		var command = data[3];	
+
+		var TransmitterID = HextoTransID(data[4], data[5], data[6], data[7], data[8]);
 		
-		
-		//Data format,
-		
-		//First bit always hould be a 1 for start of frame
-		
-		if (data[0] !=1){
-			console.log('incorrect First bit', data[0]);
-			return { 
-				para1 				: 0,
-				para2 				: 0,
-				device				: 0,
-				transID				: 0,
-				transID1 			: 0,
-				transID2 			: 0,
-				transID3 			: 0,
-				transID4 			: 0,
-				transID5 			: 0,
-				TransmitterSubID  	: 0,
-				device   			: 0,
-				channel				: 0,
-				unit				: 0,
-				command  			: 0,
-				onoff    			: false
-			};
+		var TransmitterSubID = data[9];
+		var Devarr = GetChannelandPage(device);
+	
+		if(command){
+			//Turn On
+			onoff = true;
 		}else{
-			
-	
-			var para1 = parseMessage(data,1);	
-		
-			var para2 = parseMessage(data,10);	
-		
-			var device = parseMessage(data,19);	
-		
-			var command = parseMessage(data,28);	
-	
-			var TransmitterID = HextoTransID(parseMessage(data,37), 
-											parseMessage(data,46),
-											parseMessage(data,55),
-											parseMessage(data,64),
-											parseMessage(data,73));
-			
-			
-			var TransmitterSubID = parseMessage(data,82);
-			//var TransIDArray = createTransIDtoInt(TransmitterID);
-			var Devarr = GetChannelandPage(device);
-		
-			if(command == "1"){
-				//Turn On
-				onoff = true;
-			}else{
-				//Turn Off
-				onoff = false;
-			}
-			
-			
-			console.log('Parse RX Trans ID:', TransmitterID ,' Para1:',para1,' Para2:',para2,' Command:',command);
-			
-			return { 
-				para1 				: para1,
-				para2 				: para2,
-				device				: device,
-				transID				: TransmitterID,
-			 	transID1 			: parseMessage(data,37),
-			 	transID2 			: parseMessage(data,46),
-			 	transID3 			: parseMessage(data,55),
-			 	transID4 			: parseMessage(data,64),
-			 	transID5 			: parseMessage(data,73),
-				TransmitterSubID  	: TransmitterSubID,
-				channel				: Devarr[0].toString(),
-				unit				: Devarr[1].toString(),
-				command  			: command,
-				onoff    			: onoff
-			};
-	
+			//Turn Off
+			onoff = false;
 		}
+		
+		
+		console.log('Parse RX Trans ID:', TransmitterID ,' Para1:',para1,' Para2:',para2,' Command:',command);
+		
+		return { 
+			para1 				: para1,
+			para2 				: para2,
+			device				: device,
+			transID				: TransmitterID,
+			transID1 			: data[4],
+			transID2 			: data[5],
+			transID3 			: data[6],
+			transID4 			: data[7],
+			transID5 			: data[8],
+			TransmitterSubID  	: TransmitterSubID,
+			channel				: Devarr[0].toString(),
+			unit				: Devarr[1].toString(),
+			command  			: command,
+			onoff    			: onoff
+		};
 	}
 }
 
 
 
 ///TransID Section*************************************************************************************************************
-function createTransIDtoInt(Hexs) {
-	   console.log("input Hex String", Hexs );	
-	   var ns = Hexs.tostring();
-	   
-	   if (ns.length ==5){
-       	var trans1 = Hexs.substring(0,1).tostring();
-	   	trans1 =parseInt("0x" + trans1,16);
-	   	var trans2 = Hexs.substring(1,2).tostring();
-	   	trans2 =parseInt("0x" + trans2,16);
-	   	var trans3 = Hexs.substring(2,3).tostring();
-	   	trans3 =parseInt("0x" + trans3,16);
-	   	var trans4 = Hexs.substring(3,4).tostring();
-	   	trans4 =parseInt("0x" + trans4,16);   
-       	var trans5 = Hexs.substring(4,5).tostring();
-	   	trans5 =parseInt("0x" + trans5,16);
-	   
-	   	var result = [trans1, trans2, trans3, trans4, trans5];
-	   	}
-	   else
-	   	{
-		   var result = [];
-	   	}
-	   
-	
-		console.log("Int array", result );	  
-		
-
-    return result;
-}
 
 function createHexString(intToHexArray) {
  
@@ -1534,27 +1295,6 @@ function createHexString(intToHexArray) {
 }
 
 ///TransID Section*************************************************************************************************************
-
-
-
-
-function dec2bin(dec){
-    return (dec >>> 0).toString(2);
-}
-
-function binarytoString(str) {
-  return str.split(/\s/).map(function (val){
-    return String.fromCharCode(parseInt(val, 2));
-  }).join("");
-}
-
-function bitStringToBitArray(str) {
-    var result = [];
-    for (var i = 0; i < str.length; i++)
-        result.push(str.charAt(i) == 1 ? 1 : 0);
-    return result;
-};
-
 				
 
 /**
@@ -1567,13 +1307,6 @@ function getRandomInt(min, max) {
 
 function bitArrayToString(bits) {
     return bits.join("");
-};
-
-function numberToBitArray(number, bit_count) {
-    var result = [];
-    for (var i = 0; i < bit_count; i++)
-        result[i] = (number >> i) & 1;
-    return result;
 };
 
 function displayTime() {
