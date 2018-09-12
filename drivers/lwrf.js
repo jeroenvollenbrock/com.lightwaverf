@@ -129,7 +129,7 @@ function createDriver(driver) {
 					console.log('pair about to add');
 					var dim = 1;
 					var TransmitterSubID = 1;  //check this is the same for all
-				var transID = HextoTransID(transID1, transID2, transID3, transID4, transID5);
+				var transID = HextoTransID([transID1, transID2, transID3, transID4, transID5]);
 				
 				tempdata = 
 					{
@@ -505,7 +505,7 @@ function updateDeviceDim(self, device, dim){
 function addDevice(deviceIn) {
 	//console.log('Adding device - Device Data', deviceIn);
 	
-	var transID = HextoTransID(deviceIn.transID1,deviceIn.transID2, deviceIn.transID3, deviceIn.transID4, deviceIn.transID5)
+	var transID = HextoTransID([deviceIn.transID1,deviceIn.transID2, deviceIn.transID3, deviceIn.transID4, deviceIn.transID5])
 	//console.log('Adding device - transID', transID);
 	
 	deviceList.push({
@@ -1184,24 +1184,8 @@ function GetChannelandPage(device) {
 	return Devarr;
 }
 
-
-function convertItoH(integer) {
-    var str = Number(integer).toString(16);
-    return str.length == 1 ? "0" + str : str;
-};
-
-function HextoTransID(transId1,transId2, transId3, transId4, transId5){
-	
-	
-	var t1 = convertItoH(transId1).substring(1,2);
-	var t2 = convertItoH(transId2).substring(1,2);
-	var t3 = convertItoH(transId3).substring(1,2);
-	var t4 = convertItoH(transId4).substring(1,2);
-	var t5 = convertItoH(transId5).substring(1,2);
-	
-	
-    var trans = t1 + t2 + t3 + t4 + t5;
-	return trans;
+function HextoTransID(transIds) {
+	return transIds.map(num => Number(num).toString(16)).join('');
 }
 
 
@@ -1226,46 +1210,43 @@ function createTXarray(Para1,Para2,Device,command, TransID1, TransID2, TransID3,
 
 function parseRXData(data) {
 
-	if (data != undefined) {
-	
-		var para1 = data[0];	
-		var para2 = data[1];	
-		var device = data[2];	
-		var command = data[3];	
+	var para1 = data[0];	
+	var para2 = data[1];	
+	var device = data[2];	
+	var command = data[3];	
 
-		var TransmitterID = HextoTransID(data[4], data[5], data[6], data[7], data[8]);
-		
-		var TransmitterSubID = data[9];
-		var Devarr = GetChannelandPage(device);
+	var TransmitterID = HextoTransID(data.slice(4,9));
 	
-		if(command){
-			//Turn On
-			onoff = true;
-		}else{
-			//Turn Off
-			onoff = false;
-		}
-		
-		
-		console.log('Parse RX Trans ID:', TransmitterID ,' Para1:',para1,' Para2:',para2,' Command:',command);
-		
-		return { 
-			para1 				: para1,
-			para2 				: para2,
-			device				: device,
-			transID				: TransmitterID,
-			transID1 			: data[4],
-			transID2 			: data[5],
-			transID3 			: data[6],
-			transID4 			: data[7],
-			transID5 			: data[8],
-			TransmitterSubID  	: TransmitterSubID,
-			channel				: Devarr[0].toString(),
-			unit				: Devarr[1].toString(),
-			command  			: command,
-			onoff    			: onoff
-		};
+	var TransmitterSubID = data[9];
+	var Devarr = GetChannelandPage(device);
+
+	if(command){
+		//Turn On
+		onoff = true;
+	}else{
+		//Turn Off
+		onoff = false;
 	}
+	
+	
+	console.log('Parse RX Trans ID:', TransmitterID ,' Para1:',para1,' Para2:',para2,' Command:',command);
+	
+	return { 
+		para1 				: para1,
+		para2 				: para2,
+		device				: device,
+		transID				: TransmitterID,
+		transID1 			: data[4],
+		transID2 			: data[5],
+		transID3 			: data[6],
+		transID4 			: data[7],
+		transID5 			: data[8],
+		TransmitterSubID  	: TransmitterSubID,
+		channel				: Devarr[0].toString(),
+		unit				: Devarr[1].toString(),
+		command  			: command,
+		onoff    			: onoff
+	};
 }
 
 
